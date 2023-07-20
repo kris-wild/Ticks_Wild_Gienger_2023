@@ -48,7 +48,7 @@ predicitions <-predict(logit_male_model,
   bind_cols(newdata)
 
 # Logistic regression: plotting model
-predicitions %>% 
+logistic_regression_males <- predicitions %>% 
   ggplot(aes(x = SVL)) +
   geom_ribbon(aes(ymin = ll, ymax = ul),
               alpha = 1/2) +
@@ -59,15 +59,27 @@ predicitions %>%
             aes(y = Ticks_1Y_0N, 
                 side = ifelse(Ticks_1Y_0N == 0, "top", "bottom"),
                 color = Ticks_Y_N),
-            scale = 0.1, shape = 19) +
+            scale = 0.07, shape = 19) +
   scale_color_manual("Tick Presence", values = c("grey", "#D55E00")) +
   scale_x_continuous("SVL (cm)") +
   scale_y_continuous("probability of infection",
                      expand = c(0, 0)) +
   theme_bw() +
   theme(strip.text = element_text(face = "bold"),
-        legend.position = c(0.03, .98),
-        legend.justification = c(0, 1))
+        legend.position = "none")
+
+
+# bring Legend image
+Tick_image <- magick::image_read("Final_figures/Legend_LR.png") %>% 
+  magick::image_background("none")
+image <- image_fill(Tick_image, 'none')
+tick_raster <- as.raster(image)
+
+# Regression final plot
+Regression_final <- ggdraw() +
+  draw_plot(logistic_regression_males) +
+  draw_image(tick_raster, scale = .185, x = -.32, y= 0.38) 
+
 
 
 ########
