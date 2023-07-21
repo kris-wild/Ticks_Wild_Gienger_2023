@@ -1,0 +1,15 @@
+﻿Column name,Column description
+ID,ID of individual
+Sex,Sex (male or female)
+Sex_1M_0F,Binary sex: male = 1; female = 0
+SVL,Snout-to-vent lenght measured in mm
+TL,Tail length measured in mm
+HLL,Hind-limb-length measured in mm
+Mass,Mass measured in g
+Tick_freq,Frequency of ticks
+Ticks_Y_N,Prescence Y/Absence N of ticks
+Ticks_1Y_0N,Binary Prescence/Absence
+Field Notes,Notes of capture in field
+Max_25cm,Maximum sprint speed from 3 trials
+Max_2m,Maximum 2 meter run speed from 3 trials
+Video Notes,Notes of video analysis in Tracker Software

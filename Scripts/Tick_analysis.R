@@ -62,11 +62,15 @@ logistic_regression_males <- predicitions %>%
             scale = 0.07, shape = 19) +
   scale_color_manual("Tick Presence", values = c("grey", "#D55E00")) +
   scale_x_continuous("SVL (cm)") +
-  scale_y_continuous("probability of infection",
+  scale_y_continuous("Probability of infection",
                      expand = c(0, 0)) +
   theme_bw() +
   theme(strip.text = element_text(face = "bold"),
-        legend.position = "none")
+        legend.position = "none", 
+        axis.text.x = element_text(size = 14),
+        axis.text.y = element_text(size = 14),
+        axis.title.x = element_text(size = 14),
+        axis.title.y = element_text(size = 14))
 
 
 # bring Legend image
@@ -92,7 +96,7 @@ sprint_25cm_data <- tick_data %>%
 
 # model
 sprint_25cm_mod <- lm(Max_25cm ~ HLL + Ticks_Y_N, data=sprint_25cm_data)
-anova(sprint_25cm_mod)
+anova(sprint_25cm_mod) # differences in sprint speed between treatments
 check_model(sprint_25cm_mod) # residuals & normality look fine; save mod
 saveRDS(sprint_25cm_mod, "Models/sprint_25CM.rds")
 
@@ -106,11 +110,15 @@ sprint_25cm_plot <- ggplot(sprint_25cm_mod,
   scale_shape_manual("Tick Presence", values = c(16, 17)) +
   scale_y_continuous(limits=c(1.3,4.01), breaks = seq(1.5, 4, by = .5)) +
   ylab(expression("Speed"~(~ms^{"-1"}))) +
-  xlab("hind limb length (mm)") + 
+  xlab("Hind limb length (mm)") + 
   annotate("text", x = 35, y = 4.0, label = "Maximum sprint speed", fontface = "bold", size = 5)+
   theme_bw() +
   theme(strip.text = element_text(face = "bold"),
-        legend.position = "none")
+        legend.position = "none",
+        axis.text.x = element_text(size = 14),
+        axis.text.y = element_text(size = 14),
+        axis.title.x = element_text(size = 14),
+        axis.title.y = element_text(size = 14))
 
 # bring Legend image
 Tick_image <- magick::image_read("Final_figures/Treatment_leg.png") %>% 
@@ -135,7 +143,7 @@ sprint_2m_data <- tick_data %>%
 
 # model
 sprint_2m_mod <- lm(Max_2m ~ HLL + Ticks_Y_N, data=sprint_2m_data)
-anova(sprint_2m_mod)
+anova(sprint_2m_mod) # differences in sprint speed between treatments
 check_model(sprint_2m_mod)# residuals & normality look fine; save mod
 saveRDS(sprint_2m_mod, "Models/sprint_2M.rds")
 
@@ -149,11 +157,15 @@ sprint_2m_plot <- ggplot(sprint_2m_mod,
   scale_shape_manual("Tick Presence", values = c(16, 17)) +
   scale_y_continuous(limits=c(.3,3), breaks = seq(.5, 3, by = .5)) +
   ylab(expression("Speed"~(~ms^{"-1"}))) +
-  xlab("hind limb length (mm)") + 
+  xlab("Hind limb length (mm)") + 
   annotate("text", x = 33.3, y = 3.0, label = "2 Meter run", fontface = "bold", size = 5)+
   theme_bw() +
   theme(strip.text = element_text(face = "bold"),
-        legend.position = "none")
+        legend.position = "none",
+        axis.text.x = element_text(size = 14),
+        axis.text.y = element_text(size = 14),
+        axis.title.x = element_text(size = 14),
+        axis.title.y = element_text(size = 14))
 
 # add legend
 Sprint_2m_final <- ggdraw() +
@@ -163,3 +175,16 @@ Sprint_2m_final <- ggdraw() +
 # final plot with both
 Final_sprint <- plot_grid(Sprint_25cm_final, Sprint_2m_final, labels = c('A', 'B'))
 
+
+########
+# body condition
+########
+# calcualting residuals from Regression of mass and SVL
+tick_data_BCI <- tick_data[complete.cases(tick_data$Mass, tick_data$SVL),] # note one individual is missing mass
+tick_data_BCI <- tick_data_BCI %>% filter(Sex == "M")
+fit <- lm(Mass ~ SVL, data = tick_data_BCI)
+tick_data_BCI$residuals <- residuals(fit)
+bci_mod <- lm(residuals ~ Ticks_Y_N, data = tick_data_BCI)
+anova(bci_mod) # no differences between treatments
+check_model(fit) # residuals & normality look fine; save mod
+saveRDS(bci_mod, file = "Models/BCI_ticks.rds")
