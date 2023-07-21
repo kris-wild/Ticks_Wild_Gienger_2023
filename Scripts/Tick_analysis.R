@@ -61,7 +61,7 @@ logistic_regression_males <- predicitions %>%
                 color = Ticks_Y_N),
             scale = 0.07, shape = 19) +
   scale_color_manual("Tick Presence", values = c("grey", "#D55E00")) +
-  scale_x_continuous("SVL (cm)") +
+  scale_x_continuous("SVL (mm)") +
   scale_y_continuous("Probability of infection",
                      expand = c(0, 0)) +
   theme_bw() +
@@ -80,7 +80,7 @@ image <- image_fill(Tick_image, 'none')
 tick_raster <- as.raster(image)
 
 # Regression final plot
-Regression_final <- ggdraw() +
+Logit_final <- ggdraw() +
   draw_plot(logistic_regression_males) +
   draw_image(tick_raster, scale = .185, x = -.32, y= 0.38) 
 
