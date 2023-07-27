@@ -50,9 +50,9 @@ predicitions_male <-predict(logit_male_model,
 # Logistic regression: plotting model
 logistic_regression_males <- predicitions_male %>% 
   ggplot(aes(x = SVL)) +
-  geom_ribbon(aes(ymin = ll, ymax = ul),
-              alpha = 1/2) +
-  geom_line(aes(y = fit)) +
+  #geom_ribbon(aes(ymin = ll, ymax = ul),
+              #alpha = 1/2) +
+  geom_line(aes(y = fit), size = 1.5) +
   stat_dots(data = logit_male_dat %>% 
               mutate(Ticks = factor(Ticks_1Y_0N, 
                                     levels = c("Yes", "No"))),
@@ -116,9 +116,9 @@ predicitions_female <-predict(logit_female_model,
 # Logistic regression: plotting model
 logistic_regression_females <- predicitions_female %>% 
   ggplot(aes(x = SVL)) +
-  geom_ribbon(aes(ymin = ll, ymax = ul),
-              alpha = 1/2) +
-  geom_line(aes(y = fit)) +
+  #geom_ribbon(aes(ymin = ll, ymax = ul),
+             # alpha = 1/2) +
+  geom_line(aes(y = fit), size = 1.5) +
   stat_dots(data = logit_female_dat %>% 
               mutate(Ticks = factor(Ticks_1Y_0N, 
                                     levels = c("Yes", "No"))),
