@@ -48,11 +48,13 @@ sex_yates_tbl <- tidy(sex_yates) %>%
 
 
 ####
-# Logistic regression SVL and tick presence 
+# Logistic regression SVL and tick presence males and females 
 ####
 logit_male_model <- readRDS(file = "Models/logit_male_model.RDS")%>% 
   tidy() 
 
+logit_female_model <- readRDS(file = "Models/logit_female_model.RDS")%>% 
+  tidy() 
 
 ####
 # Sprint speed results: 25CM & 2M

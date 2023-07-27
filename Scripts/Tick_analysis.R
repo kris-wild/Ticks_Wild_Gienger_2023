@@ -20,7 +20,7 @@ saveRDS(sex_yates, file = "Models/sex_yates.rds")
 
 
 ########
-# Logistic regression for presence/abcense and body size in males
+# Logistic regression for presence/abcense and body size in males & females
 ########
 logit_male_dat <- tick_data %>% 
   filter(Sex == "M")
@@ -36,7 +36,7 @@ newdata <- data.frame(SVL = seq(min(logit_male_dat$SVL),
                                 length.out = 100))
 
 # Logistic regression: compute the fitted lines and SE's
-predicitions <-predict(logit_male_model,
+predicitions_male <-predict(logit_male_model,
                        newdata = newdata,
                        type = "link",
                        se.fit = TRUE) %>% 
@@ -48,7 +48,7 @@ predicitions <-predict(logit_male_model,
   bind_cols(newdata)
 
 # Logistic regression: plotting model
-logistic_regression_males <- predicitions %>% 
+logistic_regression_males <- predicitions_male %>% 
   ggplot(aes(x = SVL)) +
   geom_ribbon(aes(ymin = ll, ymax = ul),
               alpha = 1/2) +
@@ -60,6 +60,7 @@ logistic_regression_males <- predicitions %>%
                 side = ifelse(Ticks_1Y_0N == 0, "top", "bottom"),
                 color = Ticks_Y_N),
             scale = 0.07, shape = 19) +
+  annotate("text", x = 45.0, y = .98, label = "A: Male", fontface = "bold", size = 8)+
   scale_color_manual("Tick Presence", values = c("grey", "#D55E00")) +
   scale_x_continuous("SVL (mm)") +
   scale_y_continuous("Probability of infection",
@@ -80,9 +81,78 @@ image <- image_fill(Tick_image, 'none')
 tick_raster <- as.raster(image)
 
 # Regression final plot
-Logit_final <- ggdraw() +
+Logit_final_male <- ggdraw() +
   draw_plot(logistic_regression_males) +
   draw_image(tick_raster, scale = .185, x = -.32, y= 0.38) 
+
+
+##########
+# Female Logistic regression:
+##########
+# female model summary 
+logit_female_dat <- tick_data %>% 
+  filter(Sex == "F")
+logit_female_model<- glm(Ticks_1Y_0N ~ SVL, data=logit_female_dat, family=binomial(link="logit"))
+summary(logit_female_model)
+saveRDS(logit_female_model, file = "Models/logit_female_model.RDS")
+
+# Logistic regression: create a new data frame for predictions
+newdata <- data.frame(SVL = seq(min(logit_female_dat$SVL), 
+                                max(logit_female_dat$SVL), 
+                                length.out = 100))
+
+# Logistic regression: compute the fitted lines and SE's
+predicitions_female <-predict(logit_female_model,
+                       newdata = newdata,
+                       type = "link",
+                       se.fit = TRUE) %>% 
+  data.frame() %>% 
+  mutate(ll = fit - 1.96 * se.fit,
+         ul = fit + 1.96 * se.fit) %>% 
+  select(-residual.scale, -se.fit) %>% 
+  mutate_all(plogis) %>%
+  bind_cols(newdata)
+
+# Logistic regression: plotting model
+logistic_regression_females <- predicitions_female %>% 
+  ggplot(aes(x = SVL)) +
+  geom_ribbon(aes(ymin = ll, ymax = ul),
+              alpha = 1/2) +
+  geom_line(aes(y = fit)) +
+  stat_dots(data = logit_female_dat %>% 
+              mutate(Ticks = factor(Ticks_1Y_0N, 
+                                    levels = c("Yes", "No"))),
+            aes(y = Ticks_1Y_0N, 
+                side = ifelse(Ticks_1Y_0N == 0, "top", "bottom"),
+                color = Ticks_Y_N),
+            scale = 0.1, shape = 19) +
+  annotate("text", x = 53.5, y = .98, label = "B: Female", fontface = "bold", size = 8)+
+  scale_color_manual("Tick Presence", values = c("grey", "#D55E00")) +
+  scale_x_continuous("SVL (mm)")  +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme_bw() +
+  theme(strip.text = element_text(face = "bold"),
+        legend.position = "none", 
+        axis.text.x = element_text(size = 14),
+        axis.title.y = element_blank(),
+        axis.title.x = element_text(size = 14),
+        axis.text.y = element_text(size = 14))
+
+
+# bring Legend image
+Tick_image <- magick::image_read("Final_figures/Legend_LR.png") %>% 
+  magick::image_background("none")
+image <- image_fill(Tick_image, 'none')
+tick_raster <- as.raster(image)
+
+# Regression final plot
+Logit_final_female <- ggdraw() +
+  draw_plot(logistic_regression_females) +
+  draw_image(tick_raster, scale = .185, x = -.32, y= 0.38) 
+
+
+### Final figure for males and females
+Final_logit <- plot_grid(Logit_final_male, Logit_final_female)
 
 
 
@@ -126,7 +196,7 @@ Tick_image <- magick::image_read("Final_figures/Treatment_leg.png") %>%
 image <- image_fill(Tick_image, 'none')
 tick_raster <- as.raster(image)
 
-# 25CM final plot
+#  final plot
 Sprint_25cm_final <- ggdraw() +
   draw_plot(sprint_25cm_plot) +
   draw_image(tick_raster, scale = .185, x = -.32, y= 0.38) 
