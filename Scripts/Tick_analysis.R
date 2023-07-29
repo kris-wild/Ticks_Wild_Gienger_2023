@@ -3,23 +3,6 @@ pacman::p_load("dplyr", "car", "ggplot2", "ggdist", "performance", "magick", "co
 tick_data <- read.csv("Data/Ticks_data_final.csv")
 
 ########
-# Sex differences in tick presence- chi-square test with 
-# Yates' correction
-########
-# Tick precense abcence by sex
-male_female <- tick_data %>% 
-  select(Sex, Ticks_Y_N) %>% 
-  filter(Ticks_Y_N == "Yes")
-
-# Contingency table
-contingency_table <- table(male_female$Sex, male_female$Ticks_Y_N)
-
-# Run chi-square test with Yates' correction
-sex_yates <- chisq.test(contingency_table, correct = TRUE)
-saveRDS(sex_yates, file = "Models/sex_yates.rds")
-
-
-########
 # Logistic regression for presence/abcense and body size in males & females
 ########
 logit_male_dat <- tick_data %>% 
@@ -153,6 +136,23 @@ Logit_final_female <- ggdraw() +
 
 ### Final figure for males and females
 Final_logit <- plot_grid(Logit_final_male, Logit_final_female)
+
+
+########
+# Sex differences in tick presence- chi-square test with 
+# Yates' correction
+########
+# Tick precense abcence by sex
+male_female <- tick_data %>% 
+  select(Sex, Ticks_Y_N) %>% 
+  filter(Ticks_Y_N == "Yes")
+
+# Contingency table
+contingency_table <- table(male_female$Sex, male_female$Ticks_Y_N)
+
+# Run chi-square test with Yates' correction
+sex_yates <- chisq.test(contingency_table, correct = TRUE)
+saveRDS(sex_yates, file = "Models/sex_yates.rds")
 
 
 
