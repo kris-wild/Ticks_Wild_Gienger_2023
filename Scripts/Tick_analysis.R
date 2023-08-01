@@ -43,7 +43,7 @@ logistic_regression_males <- predicitions_male %>%
                 side = ifelse(Ticks_1Y_0N == 0, "top", "bottom"),
                 color = Ticks_Y_N),
             scale = 0.07, shape = 19) +
-  annotate("text", x = 45.0, y = .98, label = "A: Male", fontface = "bold", size = 8)+
+  annotate("text", x = 45.0, y = .98, label = "A: Male", fontface = "bold", size = 5)+
   scale_color_manual("Tick Presence", values = c("grey", "#D55E00")) +
   scale_x_continuous("SVL (mm)") +
   scale_y_continuous("Probability of infection",
@@ -109,7 +109,7 @@ logistic_regression_females <- predicitions_female %>%
                 side = ifelse(Ticks_1Y_0N == 0, "top", "bottom"),
                 color = Ticks_Y_N),
             scale = 0.1, shape = 19) +
-  annotate("text", x = 53.5, y = .98, label = "B: Female", fontface = "bold", size = 8)+
+  annotate("text", x = 53.5, y = .98, label = "B: Female", fontface = "bold", size = 5)+
   scale_color_manual("Tick Presence", values = c("grey", "#D55E00")) +
   scale_x_continuous("SVL (mm)")  +
   scale_y_continuous(expand = c(0, 0)) +
@@ -174,8 +174,8 @@ saveRDS(sprint_25cm_mod, "Models/sprint_25CM.rds")
 sprint_25cm_plot <- ggplot(sprint_25cm_mod, 
                            aes(x=HLL, y=Max_25cm, 
                                color=Ticks_Y_N, shape=Ticks_Y_N)) +
-  geom_point() +
-  stat_smooth(method=lm, alpha = .22) +
+  geom_point(size = 4) +
+  stat_smooth(method=lm, se = FALSE) +
   scale_color_manual("Tick Presence", values = c("grey", "#D55E00")) +
   scale_shape_manual("Tick Presence", values = c(16, 17)) +
   scale_y_continuous(limits=c(1.3,4.01), breaks = seq(1.5, 4, by = .5)) +
@@ -221,8 +221,8 @@ saveRDS(sprint_2m_mod, "Models/sprint_2M.rds")
 sprint_2m_plot <- ggplot(sprint_2m_mod, 
                            aes(x=HLL, y=Max_2m, 
                                color=Ticks_Y_N, shape=Ticks_Y_N)) +
-  geom_point() +
-  stat_smooth(method=lm, alpha = .22) +
+  geom_point(size = 4) +
+  stat_smooth(method=lm,se = FALSE) +
   scale_color_manual("Tick Presence", values = c("grey", "#D55E00")) +
   scale_shape_manual("Tick Presence", values = c(16, 17)) +
   scale_y_continuous(limits=c(.3,3), breaks = seq(.5, 3, by = .5)) +
