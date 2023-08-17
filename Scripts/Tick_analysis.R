@@ -35,7 +35,7 @@ logistic_regression_males <- predicitions_male %>%
   ggplot(aes(x = SVL)) +
   #geom_ribbon(aes(ymin = ll, ymax = ul),
               #alpha = 1/2) +
-  geom_line(aes(y = fit), size = 1.5) +
+  geom_line(aes(y = fit), size = 1.4) +
   stat_dots(data = logit_male_dat %>% 
               mutate(Ticks = factor(Ticks_1Y_0N, 
                                     levels = c("Yes", "No"))),
@@ -43,18 +43,18 @@ logistic_regression_males <- predicitions_male %>%
                 side = ifelse(Ticks_1Y_0N == 0, "top", "bottom"),
                 color = Ticks_Y_N),
             scale = 0.07, shape = 19) +
-  annotate("text", x = 45.0, y = .98, label = "A: Male", fontface = "bold", size = 5)+
+  annotate("text", x = 46.0, y = .96, label = "A: Male", fontface = "bold", size = 4)+
   scale_color_manual("Tick Presence", values = c("grey", "#D55E00")) +
   scale_x_continuous("SVL (mm)") +
-  scale_y_continuous("Probability of infection",
+  scale_y_continuous("Probability of Infection",
                      expand = c(0, 0)) +
   theme_bw() +
   theme(strip.text = element_text(face = "bold"),
         legend.position = "none", 
-        axis.text.x = element_text(size = 14),
-        axis.text.y = element_text(size = 14),
-        axis.title.x = element_text(size = 14),
-        axis.title.y = element_text(size = 14))
+        axis.text.x = element_text(size = 10),
+        axis.text.y = element_text(size = 10),
+        axis.title.x = element_text(size = 10),
+        axis.title.y = element_text(size = 10))
 
 
 # bring Legend image
@@ -66,7 +66,7 @@ tick_raster <- as.raster(image)
 # Regression final plot
 Logit_final_male <- ggdraw() +
   draw_plot(logistic_regression_males) +
-  draw_image(tick_raster, scale = .185, x = -.32, y= 0.38) 
+  draw_image(tick_raster, scale = .28, x = -.21, y= 0.35) 
 
 
 ##########
@@ -101,7 +101,7 @@ logistic_regression_females <- predicitions_female %>%
   ggplot(aes(x = SVL)) +
   #geom_ribbon(aes(ymin = ll, ymax = ul),
              # alpha = 1/2) +
-  geom_line(aes(y = fit), size = 1.5) +
+  geom_line(aes(y = fit), size = 1.3) +
   stat_dots(data = logit_female_dat %>% 
               mutate(Ticks = factor(Ticks_1Y_0N, 
                                     levels = c("Yes", "No"))),
@@ -109,17 +109,17 @@ logistic_regression_females <- predicitions_female %>%
                 side = ifelse(Ticks_1Y_0N == 0, "top", "bottom"),
                 color = Ticks_Y_N),
             scale = 0.1, shape = 19) +
-  annotate("text", x = 53.5, y = .98, label = "B: Female", fontface = "bold", size = 5)+
+  annotate("text", x = 54.5, y = .96, label = "B: Female", fontface = "bold", size = 4)+
   scale_color_manual("Tick Presence", values = c("grey", "#D55E00")) +
   scale_x_continuous("SVL (mm)")  +
   scale_y_continuous(expand = c(0, 0)) +
   theme_bw() +
   theme(strip.text = element_text(face = "bold"),
         legend.position = "none", 
-        axis.text.x = element_text(size = 14),
+        axis.text.x = element_text(size = 10),
         axis.title.y = element_blank(),
-        axis.title.x = element_text(size = 14),
-        axis.text.y = element_text(size = 14))
+        axis.title.x = element_text(size = 10),
+        axis.text.y = element_text(size = 10))
 
 
 # bring Legend image
@@ -131,12 +131,13 @@ tick_raster <- as.raster(image)
 # Regression final plot
 Logit_final_female <- ggdraw() +
   draw_plot(logistic_regression_females) +
-  draw_image(tick_raster, scale = .185, x = -.32, y= 0.38) 
+  draw_image(tick_raster, scale = .28, x = -.21, y= 0.35) 
 
 
 ### Final figure for males and females
 Final_logit <- plot_grid(Logit_final_male, Logit_final_female)
-
+library(scales)
+ggsave(filename = "Final_figures/Figure_1.pdf", plot = Final_logit, width = 181, height = 121, units = "mm", dpi = 600)
 
 ########
 # Sex differences in tick presence- chi-square test with 
@@ -179,16 +180,16 @@ sprint_25cm_plot <- ggplot(sprint_25cm_mod,
   scale_color_manual("Tick Presence", values = c("grey", "#D55E00")) +
   scale_shape_manual("Tick Presence", values = c(16, 17)) +
   scale_y_continuous(limits=c(1.3,4.01), breaks = seq(1.5, 4, by = .5)) +
-  ylab(expression("Speed"~(~ms^{"-1"}))) +
-  xlab("Hind limb length (mm)") + 
-  annotate("text", x = 35, y = 4.0, label = "Maximum sprint speed", fontface = "bold", size = 5)+
+  ylab(expression("Speed"~(m~sec^{"-1"}))) +
+  xlab("Hind Limb Length (mm)") + 
+  annotate("text", x = 38.1, y = 4.0, label = "A: Maximum sprint speed", fontface = "bold", size = 4)+
   theme_bw() +
   theme(strip.text = element_text(face = "bold"),
         legend.position = "none",
-        axis.text.x = element_text(size = 14),
-        axis.text.y = element_text(size = 14),
-        axis.title.x = element_text(size = 14),
-        axis.title.y = element_text(size = 14))
+        axis.text.x = element_text(size = 10),
+        axis.text.y = element_text(size = 10),
+        axis.title.x = element_text(size = 10),
+        axis.title.y = element_text(size = 10))
 
 # bring Legend image
 Tick_image <- magick::image_read("Final_figures/Treatment_leg.png") %>% 
@@ -199,7 +200,7 @@ tick_raster <- as.raster(image)
 #  final plot
 Sprint_25cm_final <- ggdraw() +
   draw_plot(sprint_25cm_plot) +
-  draw_image(tick_raster, scale = .185, x = -.32, y= 0.38) 
+  draw_image(tick_raster, scale = .28, x = -.21, y= 0.35) 
 
 
 
@@ -226,27 +227,30 @@ sprint_2m_plot <- ggplot(sprint_2m_mod,
   scale_color_manual("Tick Presence", values = c("grey", "#D55E00")) +
   scale_shape_manual("Tick Presence", values = c(16, 17)) +
   scale_y_continuous(limits=c(.3,3), breaks = seq(.5, 3, by = .5)) +
-  ylab(expression("Speed"~(~ms^{"-1"}))) +
-  xlab("Hind limb length (mm)") + 
-  annotate("text", x = 33.3, y = 3.0, label = "2 Meter run", fontface = "bold", size = 5)+
+  ylab(expression("Speed"~(m~sec^{"-1"}))) +
+  xlab("Hind Limb Length (mm)") + 
+  annotate("text", x = 35, y = 3.0, label = "B: 2 Meter run", fontface = "bold", size = 4)+
   theme_bw() +
   theme(strip.text = element_text(face = "bold"),
         legend.position = "none",
-        axis.text.x = element_text(size = 14),
-        axis.text.y = element_text(size = 14),
-        axis.title.x = element_text(size = 14),
-        axis.title.y = element_text(size = 14))
+        axis.text.x = element_text(size = 10),
+        axis.text.y = element_text(size = 10),
+        axis.title.x = element_text(size = 10),
+        axis.title.y = element_blank())
 
 # add legend
 Sprint_2m_final <- ggdraw() +
   draw_plot(sprint_2m_plot) +
-  draw_image(tick_raster, scale = .185, x = -.32, y= 0.38) 
+  draw_image(tick_raster, scale = .28, x = -.278, y= 0.35) 
 
 # final plot with both
-Final_sprint <- plot_grid(Sprint_25cm_final, Sprint_2m_final, labels = c('A', 'B'))
+Final_sprint <- plot_grid(Sprint_25cm_final, Sprint_2m_final)
+
+#save plot
+ggsave(filename = "Final_figures/Figure_2.pdf", plot = Final_sprint, width = 181, height = 121, units = "mm", dpi = 600)
 
 
-########
+ ########
 # body condition
 ########
 # calcualting residuals from Regression of mass and SVL
