@@ -175,7 +175,7 @@ saveRDS(sprint_25cm_mod, "Models/sprint_25CM.rds")
 sprint_25cm_plot <- ggplot(sprint_25cm_mod, 
                            aes(x=HLL, y=Max_25cm, 
                                color=Ticks_Y_N, shape=Ticks_Y_N)) +
-  geom_point(size = 4) +
+  geom_point(size = 3) +
   stat_smooth(method=lm, se = FALSE) +
   scale_color_manual("Tick Presence", values = c("grey", "#D55E00")) +
   scale_shape_manual("Tick Presence", values = c(16, 17)) +
@@ -222,7 +222,7 @@ saveRDS(sprint_2m_mod, "Models/sprint_2M.rds")
 sprint_2m_plot <- ggplot(sprint_2m_mod, 
                            aes(x=HLL, y=Max_2m, 
                                color=Ticks_Y_N, shape=Ticks_Y_N)) +
-  geom_point(size = 4) +
+  geom_point(size = 3) +
   stat_smooth(method=lm,se = FALSE) +
   scale_color_manual("Tick Presence", values = c("grey", "#D55E00")) +
   scale_shape_manual("Tick Presence", values = c(16, 17)) +
