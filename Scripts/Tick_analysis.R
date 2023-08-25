@@ -131,7 +131,7 @@ tick_raster <- as.raster(image)
 # Regression final plot
 Logit_final_female <- ggdraw() +
   draw_plot(logistic_regression_females) +
-  draw_image(tick_raster, scale = .28, x = -.26, y= 0.34) #35
+  draw_image(tick_raster, scale = .28, x = -.26, y= 0.35) #35
 
 
 ### Final figure for males and females
