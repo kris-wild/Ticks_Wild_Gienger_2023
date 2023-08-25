@@ -35,14 +35,14 @@ logistic_regression_males <- predicitions_male %>%
   ggplot(aes(x = SVL)) +
   #geom_ribbon(aes(ymin = ll, ymax = ul),
               #alpha = 1/2) +
-  geom_line(aes(y = fit), size = 1.4) +
+  geom_line(aes(y = fit), size = 1.2) +
   stat_dots(data = logit_male_dat %>% 
               mutate(Ticks = factor(Ticks_1Y_0N, 
                                     levels = c("Yes", "No"))),
             aes(y = Ticks_1Y_0N, 
                 side = ifelse(Ticks_1Y_0N == 0, "top", "bottom"),
                 color = Ticks_Y_N),
-            scale = 0.07, shape = 19) +
+            scale = 0.1, shape = 19) +
   annotate("text", x = 46.0, y = .96, label = "A: Male", fontface = "bold", size = 4)+
   scale_color_manual("Tick Presence", values = c("grey", "#D55E00")) +
   scale_x_continuous("SVL (mm)") +
@@ -66,7 +66,7 @@ tick_raster <- as.raster(image)
 # Regression final plot
 Logit_final_male <- ggdraw() +
   draw_plot(logistic_regression_males) +
-  draw_image(tick_raster, scale = .28, x = -.21, y= 0.35) 
+  draw_image(tick_raster, scale = .28, x = -.23 , y= 0.35) #24
 
 
 ##########
@@ -101,14 +101,14 @@ logistic_regression_females <- predicitions_female %>%
   ggplot(aes(x = SVL)) +
   #geom_ribbon(aes(ymin = ll, ymax = ul),
              # alpha = 1/2) +
-  geom_line(aes(y = fit), size = 1.3) +
+  geom_line(aes(y = fit), size = 1.2) +
   stat_dots(data = logit_female_dat %>% 
               mutate(Ticks = factor(Ticks_1Y_0N, 
                                     levels = c("Yes", "No"))),
             aes(y = Ticks_1Y_0N, 
                 side = ifelse(Ticks_1Y_0N == 0, "top", "bottom"),
                 color = Ticks_Y_N),
-            scale = 0.1, shape = 19) +
+            scale = 0.15, shape = 19) +
   annotate("text", x = 54.5, y = .96, label = "B: Female", fontface = "bold", size = 4)+
   scale_color_manual("Tick Presence", values = c("grey", "#D55E00")) +
   scale_x_continuous("SVL (mm)")  +
@@ -131,13 +131,13 @@ tick_raster <- as.raster(image)
 # Regression final plot
 Logit_final_female <- ggdraw() +
   draw_plot(logistic_regression_females) +
-  draw_image(tick_raster, scale = .28, x = -.21, y= 0.35) 
+  draw_image(tick_raster, scale = .28, x = -.26, y= 0.34) #35
 
 
 ### Final figure for males and females
 Final_logit <- plot_grid(Logit_final_male, Logit_final_female)
 library(scales)
-ggsave(filename = "Final_figures/Figure_1.pdf", plot = Final_logit, width = 181, height = 121, units = "mm", dpi = 600)
+ggsave(filename = "Final_figures/Figure_1.pdf", plot = Final_logit, width = 181, height = 80, units = "mm", dpi = 600)
 
 ########
 # Sex differences in tick presence- chi-square test with 
@@ -175,7 +175,7 @@ saveRDS(sprint_25cm_mod, "Models/sprint_25CM.rds")
 sprint_25cm_plot <- ggplot(sprint_25cm_mod, 
                            aes(x=HLL, y=Max_25cm, 
                                color=Ticks_Y_N, shape=Ticks_Y_N)) +
-  geom_point(size = 3) +
+  geom_point(size = 2) +
   stat_smooth(method=lm, se = FALSE) +
   scale_color_manual("Tick Presence", values = c("grey", "#D55E00")) +
   scale_shape_manual("Tick Presence", values = c(16, 17)) +
@@ -200,7 +200,7 @@ tick_raster <- as.raster(image)
 #  final plot
 Sprint_25cm_final <- ggdraw() +
   draw_plot(sprint_25cm_plot) +
-  draw_image(tick_raster, scale = .28, x = -.21, y= 0.35) 
+  draw_image(tick_raster, scale = .28, x = -.21, y= 0.32) 
 
 
 
@@ -222,7 +222,7 @@ saveRDS(sprint_2m_mod, "Models/sprint_2M.rds")
 sprint_2m_plot <- ggplot(sprint_2m_mod, 
                            aes(x=HLL, y=Max_2m, 
                                color=Ticks_Y_N, shape=Ticks_Y_N)) +
-  geom_point(size = 3) +
+  geom_point(size = 2) +
   stat_smooth(method=lm,se = FALSE) +
   scale_color_manual("Tick Presence", values = c("grey", "#D55E00")) +
   scale_shape_manual("Tick Presence", values = c(16, 17)) +
@@ -241,16 +241,16 @@ sprint_2m_plot <- ggplot(sprint_2m_mod,
 # add legend
 Sprint_2m_final <- ggdraw() +
   draw_plot(sprint_2m_plot) +
-  draw_image(tick_raster, scale = .28, x = -.278, y= 0.35) 
+  draw_image(tick_raster, scale = .28, x = -.278, y= 0.32) 
 
 # final plot with both
 Final_sprint <- plot_grid(Sprint_25cm_final, Sprint_2m_final)
 
 #save plot
-ggsave(filename = "Final_figures/Figure_2.pdf", plot = Final_sprint, width = 181, height = 121, units = "mm", dpi = 600)
+ggsave(filename = "Final_figures/Figure_2.pdf", plot = Final_sprint, width = 181, height = 80, units = "mm", dpi = 600)
 
 
- ########
+########
 # body condition
 ########
 # calcualting residuals from Regression of mass and SVL
