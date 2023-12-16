@@ -163,7 +163,7 @@ saveRDS(sex_yates, file = "Models/sex_yates.rds")
 ########
 sprint_25cm_data <- tick_data %>% 
   filter(Sex == "M") %>% 
-  select(HLL, Mass, SVL, Ticks_Y_N, Max_25cm)
+  select(HLL, Mass, SVL, Ticks_Y_N, Max_25cm, Tick_freq)
 
 # model
 sprint_25cm_mod <- lm(Max_25cm ~ HLL + Ticks_Y_N, data=sprint_25cm_data)
@@ -254,7 +254,29 @@ ggsave(filename = "Final_figures/Figure_2.pdf", plot = Final_sprint, width = 181
 # body condition
 ########
 # calcualting residuals from Regression of mass and SVL
-tick_data_BCI <- tick_data[complete.cases(tick_data$Mass, tick_data$SVL),] # note one individual is missing mass
+tick_data_BCI <- tick_data[complete.cases(tick_data$Mass, tick_data$SVL),] 
+
+# Revewer 1: check liniarity between mass and svl before analysis. 
+model <- lm(tick_data_BCI$Mass ~ tick_data_BCI$SVL)
+model_summary <- summary(model)
+# Plot the points
+plot(tick_data_BCI$SVL, tick_data_BCI$Mass, 
+     main="Regression: SVL (cm) vs Mass (g)", 
+     xlab="SVL (cm)", ylab="Mass (g)", pch=19)
+# Add the fitted line
+abline(model, col="red")
+# Extracting and displaying the equation of the line
+coefficients <- coef(model)
+equation <- paste("y =", round(coefficients[2], 2), "* x +", round(coefficients[1], 2))
+text(50, 16, labels=equation, col="black")
+# Extracting the F-statistic and its p-value and displaying them
+f_statistic <- model_summary$fstatistic[1]
+f_p_value <- pf(f_statistic, model_summary$fstatistic[2], model_summary$fstatistic[3], lower.tail = FALSE)
+f_statistic_text <- paste("F =", round(f_statistic, 2), ", p < 0.001")
+text(50, 15, labels=f_statistic_text, col="black")
+
+
+# BCI test
 tick_data_BCI <- tick_data_BCI %>% filter(Sex == "M")
 fit <- lm(Mass ~ SVL, data = tick_data_BCI)
 tick_data_BCI$residuals <- residuals(fit)
